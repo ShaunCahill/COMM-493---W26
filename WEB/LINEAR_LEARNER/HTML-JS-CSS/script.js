@@ -6,7 +6,7 @@
 // using an AWS SageMaker Linear Learner regression endpoint.
 //
 // The flow:
-//   1. User pastes 203 comma-separated feature values (or loads an example)
+//   1. User pastes 198 comma-separated feature values (or loads an example)
 //   2. Features are parsed and sent as JSON to API Gateway
 //   3. Lambda converts to CSV and forwards to SageMaker endpoint
 //   4. Predicted sale price is displayed
@@ -20,7 +20,11 @@
 // EXAMPLE DATA
 // ============================================================
 // Three sample houses from the Ames Housing validation set.
-// Each array contains 203 numeric feature values.
+// Each array contains 198 numeric feature values.
+//
+// INSTRUCTION: If the model is retrained and the feature count changes,
+// regenerate these arrays from the notebook using the code in
+// STEP 10 (Generate Web and Lambda Test Data).
 
 var EXAMPLES = {
     "1": [
@@ -111,9 +115,9 @@ function parseFeatureInput(raw) {
         return num;
     });
 
-    if (numbers.length !== 203) {
+    if (numbers.length !== 198) {
         throw new Error(
-            "Expected 203 features but received " + numbers.length + ". "
+            "Expected 198 features but received " + numbers.length + ". "
             + "Make sure you are pasting a complete row from your validation set."
         );
     }
