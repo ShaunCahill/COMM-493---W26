@@ -9,7 +9,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # IMPORTANT: Update this to match your deployed SageMaker endpoint name.
-ENDPOINT_NAME = "your-regression-endpoint-name"
+ENDPOINT_NAME = "linear-learner-endpoint"
 
 # Initialize the SageMaker runtime client
 runtime = boto3.client("runtime.sagemaker")
@@ -90,6 +90,12 @@ def lambda_handler(event, context):
 
         # Convert instances to CSV format.
         csv_payload = convert_to_csv(instances)
+
+        # Log payload details for debugging.
+        logger.info(f"Endpoint: {ENDPOINT_NAME}")
+        logger.info(f"Number of instances: {len(instances)}")
+        logger.info(f"Features per instance: {len(instances[0])}")
+        logger.info(f"CSV payload (first 200 chars): {csv_payload[:200]}")
 
         # Invoke the SageMaker endpoint.
         response = runtime.invoke_endpoint(
