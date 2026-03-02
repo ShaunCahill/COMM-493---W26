@@ -1,0 +1,715 @@
+/*
+  Product Launch Command Center
+  Professional dashboard design system for customer feedback analysis.
+*/
+
+/* ============================================================
+   CSS Custom Properties (Design Tokens)
+   ============================================================ */
+:root {
+    --brand: #1E3A5F;
+    --brand-dark: #152C4A;
+    --accent: #0D9488;
+    --accent-hover: #0A7A70;
+    --surface: #F7F8FA;
+    --surface-dark: #ECEEF2;
+    --positive: #2E7D32;
+    --positive-bg: #E8F5E9;
+    --positive-light: #81C784;
+    --negative: #C62828;
+    --negative-bg: #FFEBEE;
+    --negative-light: #E57373;
+    --text-primary: #1A1A2E;
+    --text-secondary: #555566;
+    --text-light: #888899;
+    --border: #D5D8E0;
+    --border-light: #E8EAF0;
+    --white: #FFFFFF;
+    --shadow-sm: 0 1px 3px rgba(30, 58, 95, 0.06);
+    --shadow-md: 0 4px 12px rgba(30, 58, 95, 0.08);
+    --shadow-lg: 0 8px 24px rgba(30, 58, 95, 0.1);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+}
+
+/* ============================================================
+   Base Styles
+   ============================================================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--surface);
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding: 24px 16px;
+}
+
+/* ============================================================
+   Layout
+   ============================================================ */
+.dashboard {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* ============================================================
+   Header
+   ============================================================ */
+.header {
+    text-align: center;
+    padding: 32px 24px;
+    background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+    color: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 24px;
+}
+
+.header-icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+}
+
+.header .tagline {
+    font-size: 16px;
+    color: #7EB8DA;
+    font-weight: 400;
+}
+
+/* ============================================================
+   Cards (shared)
+   ============================================================ */
+.card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--brand);
+    margin-bottom: 12px;
+}
+
+/* ============================================================
+   Scenario Card
+   ============================================================ */
+.scenario-card {
+    border-left: 4px solid var(--accent);
+}
+
+.scenario-card p {
+    color: var(--text-secondary);
+    font-size: 15px;
+}
+
+/* ============================================================
+   Input Section
+   ============================================================ */
+.input-section textarea {
+    width: 100%;
+    min-height: 200px;
+    padding: 14px;
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    resize: vertical;
+    transition: border-color 0.2s ease;
+}
+
+.input-section textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.input-section .textarea-hint {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 6px;
+}
+
+.button-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.btn {
+    padding: 12px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-primary {
+    background-color: var(--accent);
+    color: var(--white);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+}
+
+.btn-secondary {
+    background-color: var(--surface-dark);
+    color: var(--text-secondary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: var(--border);
+}
+
+/* ============================================================
+   Progress Indicator
+   ============================================================ */
+.progress-indicator {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+}
+
+.progress-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+}
+
+.progress-step.active {
+    opacity: 1;
+}
+
+.progress-step.completed {
+    opacity: 0.7;
+}
+
+.step-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--border);
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.progress-step.active .step-icon {
+    background-color: var(--accent);
+    animation: pulse 1.5s infinite;
+}
+
+.progress-step.completed .step-icon {
+    background-color: var(--positive);
+}
+
+.step-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.progress-step.active .step-text {
+    color: var(--text-primary);
+}
+
+.progress-connector {
+    width: 40px;
+    height: 2px;
+    background-color: var(--border);
+    margin: 0 12px;
+    transition: background-color 0.3s ease;
+}
+
+.progress-connector.filled {
+    background-color: var(--positive);
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.3); }
+    50% { box-shadow: 0 0 0 8px rgba(13, 148, 136, 0); }
+}
+
+/* ============================================================
+   Summary Stats Bar
+   ============================================================ */
+.summary-stats {
+    display: none;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.stat-card {
+    flex: 1;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+    padding: 16px;
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+.stat-total .stat-value { color: var(--brand); }
+.stat-positive .stat-value { color: var(--positive); }
+.stat-negative .stat-value { color: var(--negative); }
+.stat-score .stat-value { color: var(--accent); }
+.stat-confidence .stat-value { color: var(--brand); }
+
+/* ============================================================
+   Results Area
+   ============================================================ */
+#resultsArea {
+    display: none;
+}
+
+.panel-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--brand);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-light);
+}
+
+.panel-title-pos {
+    color: var(--positive);
+    border-bottom-color: var(--positive-bg);
+}
+
+.panel-title-neg {
+    color: var(--negative);
+    border-bottom-color: var(--negative-bg);
+}
+
+/* ============================================================
+   Sentiment Results
+   ============================================================ */
+.review-card {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid var(--border-light);
+}
+
+.review-card:last-child {
+    margin-bottom: 0;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.review-number {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border-radius: 20px;
+}
+
+.badge-positive {
+    background-color: var(--positive-bg);
+    color: var(--positive);
+}
+
+.badge-negative {
+    background-color: var(--negative-bg);
+    color: var(--negative);
+}
+
+.review-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    line-height: 1.5;
+}
+
+.confidence-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.confidence-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    min-width: 75px;
+}
+
+.confidence-bar {
+    flex: 1;
+    height: 8px;
+    background-color: var(--surface-dark);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.confidence-fill-positive {
+    height: 100%;
+    background-color: var(--positive-light);
+    border-radius: 4px;
+    transition: width 0.6s ease;
+}
+
+.confidence-fill-negative {
+    height: 100%;
+    background-color: var(--negative-light);
+    border-radius: 4px;
+    transition: width 0.6s ease;
+}
+
+.confidence-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+    min-width: 50px;
+    text-align: right;
+}
+
+/* ============================================================
+   Topic Discovery
+   ============================================================ */
+.topic-chart {
+    padding: 8px 0;
+}
+
+.topic-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.topic-row:last-child {
+    margin-bottom: 0;
+}
+
+.topic-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 65px;
+}
+
+.topic-bar-container {
+    flex: 1;
+    height: 24px;
+    background-color: var(--surface);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.topic-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s ease;
+    min-width: 2px;
+}
+
+.topic-weight {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    min-width: 45px;
+    text-align: right;
+}
+
+.topic-review-count {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-light);
+    min-width: 70px;
+    text-align: right;
+}
+
+.topic-group {
+    margin-bottom: 16px;
+}
+
+.topic-group:last-child {
+    margin-bottom: 0;
+}
+
+.topic-reviews {
+    margin: 8px 0 0 0;
+    padding-left: 80px;
+}
+
+.topic-review-item {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 6px 10px;
+    margin-bottom: 4px;
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--border-light);
+}
+
+.topic-review-item:last-child {
+    margin-bottom: 0;
+}
+
+.topic-review-strength {
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 36px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.topic-review-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
+
+/* ============================================================
+   Settings Section
+   ============================================================ */
+.settings-card {
+    border-top: 3px solid var(--brand);
+}
+
+.settings-card .card-title {
+    font-size: 16px;
+}
+
+.setting-group {
+    margin-bottom: 16px;
+}
+
+.setting-group:last-of-type {
+    margin-bottom: 0;
+}
+
+.setting-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.setting-group input[type="text"] {
+    width: 100%;
+    padding: 10px 14px;
+    font-family: "Segoe UI Mono", "SF Mono", "Consolas", monospace;
+    font-size: 13px;
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.2s ease;
+}
+
+.setting-group input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.setting-group input[type="text"]::placeholder {
+    color: var(--text-light);
+}
+
+.settings-button-row {
+    margin-top: 16px;
+}
+
+.btn-save {
+    background-color: var(--brand);
+    color: var(--white);
+    padding: 10px 24px;
+    font-size: 14px;
+}
+
+.btn-save:hover:not(:disabled) {
+    background-color: var(--brand-dark);
+}
+
+.btn-saved {
+    background-color: var(--positive) !important;
+}
+
+.settings-hint {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-light);
+    font-size: 13px;
+}
+
+/* ============================================================
+   Utility Classes
+   ============================================================ */
+.loading {
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    padding: 20px;
+}
+
+.error-message {
+    color: var(--negative);
+    background-color: var(--negative-bg);
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+}
+
+.no-results {
+    text-align: center;
+    color: var(--text-light);
+    padding: 20px;
+}
+
+.info-message {
+    color: var(--text-secondary);
+    background-color: var(--surface);
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    border: 1px solid var(--border-light);
+}
+
+/* ============================================================
+   Responsive Design
+   ============================================================ */
+@media (max-width: 640px) {
+    body {
+        padding: 12px 8px;
+    }
+
+    .header {
+        padding: 24px 16px;
+    }
+
+    .header h1 {
+        font-size: 22px;
+    }
+
+    .summary-stats {
+        flex-wrap: wrap;
+    }
+
+    .stat-card {
+        flex-basis: calc(50% - 6px);
+    }
+
+    .stat-card:last-child {
+        flex-basis: 100%;
+    }
+
+    .button-row {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .confidence-row {
+        flex-wrap: wrap;
+    }
+
+    .confidence-label {
+        min-width: 100%;
+    }
+
+    .progress-indicator {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .progress-connector {
+        display: none;
+    }
+
+    .topic-reviews {
+        padding-left: 0;
+    }
+}

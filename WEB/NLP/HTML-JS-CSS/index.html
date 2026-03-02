@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Launch Command Center</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="dashboard">
+
+    <!-- ========== Header ========== -->
+    <header class="header">
+      <div class="header-icon">&#128640;</div>
+      <h1>Product Launch Command Center</h1>
+      <p class="tagline">AI-Powered Customer Feedback Analysis</p>
+    </header>
+
+    <!-- ========== Scenario Card ========== -->
+    <div class="card scenario-card">
+      <h2 class="card-title">Business Scenario</h2>
+      <p>
+        You are a product manager who just launched a new coffee maker. Customer reviews
+        are flooding in, and you need to quickly understand what people think. This dashboard
+        uses three machine learning models to analyze your feedback:
+        <strong>BlazingText</strong> classifies each review as positive or negative, then
+        <strong>LDA Topic Modeling</strong> discovers what customers love (positive topics)
+        and where they see room for improvement (negative topics). Paste your reviews below
+        and click "Analyze Feedback" to get actionable insights.
+      </p>
+    </div>
+
+    <!-- ========== Input Section ========== -->
+    <div class="card input-section">
+      <h2 class="card-title">Customer Feedback</h2>
+      <textarea id="reviewInput" rows="12">This coffee maker is absolutely wonderful. It brews a perfect cup every single morning and the auto timer feature is incredibly convenient.
+Very disappointed with this purchase. The carafe leaks every time I pour and the coffee tastes burnt no matter what settings I use.
+Love how quiet this machine is compared to my old one. The design looks great on my kitchen counter and cleanup is a breeze.
+Broke after only three weeks of use. Customer service was unhelpful and I am still waiting for a replacement. Total waste of money.
+Best coffee maker I have ever owned. The brew strength selector lets me customize my cup perfectly and it keeps the coffee hot for hours.
+The filter basket is flimsy plastic that cracked on the first use. Build quality is terrible for the price they are charging.
+My whole family loves this machine. We go through multiple pots a day and it handles the volume without any issues.
+Water reservoir is hard to fill and impossible to see the water level. The buttons are confusing and the manual is useless.</textarea>
+      <p class="textarea-hint">Enter one review per line. Each line will be analyzed separately.</p>
+      <div class="button-row">
+        <button id="analyzeBtn" class="btn btn-primary">Analyze Feedback</button>
+        <button id="clearBtn" class="btn btn-secondary">Clear Results</button>
+      </div>
+    </div>
+
+    <!-- ========== Progress Indicator ========== -->
+    <div id="progressIndicator" class="progress-indicator">
+      <div class="progress-step" id="progressStep1">
+        <div class="step-icon">1</div>
+        <div class="step-text">Classifying Sentiment</div>
+      </div>
+      <div class="progress-connector"></div>
+      <div class="progress-step" id="progressStep2">
+        <div class="step-icon">2</div>
+        <div class="step-text">Discovering Topics</div>
+      </div>
+    </div>
+
+    <!-- ========== Summary Stats Bar ========== -->
+    <div id="summaryStats" class="summary-stats">
+      <div class="stat-card stat-total">
+        <div id="statTotal" class="stat-value">0</div>
+        <div class="stat-label">Reviews Analyzed</div>
+      </div>
+      <div class="stat-card stat-positive">
+        <div id="statPositive" class="stat-value">0</div>
+        <div class="stat-label">Positive</div>
+      </div>
+      <div class="stat-card stat-negative">
+        <div id="statNegative" class="stat-value">0</div>
+        <div class="stat-label">Negative</div>
+      </div>
+      <div class="stat-card stat-score">
+        <div id="statScore" class="stat-value">0%</div>
+        <div class="stat-label">Sentiment Score</div>
+      </div>
+      <div class="stat-card stat-confidence">
+        <div id="statConfidence" class="stat-value">0%</div>
+        <div class="stat-label">Avg Confidence</div>
+      </div>
+    </div>
+
+    <!-- ========== Results Area ========== -->
+    <div id="resultsArea">
+
+      <!-- Sentiment Results Panel -->
+      <div id="sentimentPanel" class="card">
+        <h2 class="panel-title">Sentiment Breakdown</h2>
+        <div id="sentimentResults"></div>
+      </div>
+
+      <!-- Positive Topics Panel -->
+      <div id="topicPosPanel" class="card">
+        <h2 class="panel-title panel-title-pos">What Customers Love</h2>
+        <div id="topicPosResults"></div>
+      </div>
+
+      <!-- Negative Topics Panel -->
+      <div id="topicNegPanel" class="card">
+        <h2 class="panel-title panel-title-neg">Areas for Improvement</h2>
+        <div id="topicNegResults"></div>
+      </div>
+
+    </div>
+
+    <!-- ========== Settings Section ========== -->
+    <div class="card settings-card">
+      <h2 class="card-title">API Settings</h2>
+
+      <div class="setting-group">
+        <label for="blazingTextUrl">BlazingText API Gateway URL (Sentiment Analysis)</label>
+        <!-- INSTRUCTION: Paste your BlazingText API Gateway Invoke URL here -->
+        <input type="text" id="blazingTextUrl"
+               placeholder="https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/sentiment">
+      </div>
+
+      <div class="setting-group">
+        <label for="ldaPosUrl">LDA POS API Gateway URL (Positive Topic Modeling)</label>
+        <!-- INSTRUCTION: Paste your LDA POS API Gateway Invoke URL here -->
+        <input type="text" id="ldaPosUrl"
+               placeholder="https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/topics-pos">
+      </div>
+
+      <div class="setting-group">
+        <label for="ldaNegUrl">LDA NEG API Gateway URL (Negative Topic Modeling)</label>
+        <!-- INSTRUCTION: Paste your LDA NEG API Gateway Invoke URL here -->
+        <input type="text" id="ldaNegUrl"
+               placeholder="https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/topics-neg">
+      </div>
+
+      <div class="settings-button-row">
+        <button id="saveSettingsBtn" class="btn btn-save">Save Settings</button>
+      </div>
+      <p class="settings-hint">
+        Settings are saved in your browser and will persist across page reloads.
+        The BlazingText URL is required. LDA URLs are optional and enable topic discovery
+        for positive and negative reviews respectively.
+      </p>
+    </div>
+
+    <!-- ========== Footer ========== -->
+    <footer class="footer">
+      <p>COMM 493 &mdash; Machine Learning for Business &mdash; Queen's University Smith School of Business</p>
+    </footer>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

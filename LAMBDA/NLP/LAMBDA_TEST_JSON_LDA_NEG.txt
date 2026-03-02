@@ -1,0 +1,8 @@
+{
+    "instances": [
+        "Waited over 20 minutes for a simple drip coffee. The barista seemed completely uninterested in helping customers.",
+        "Coffee was lukewarm and tasted burnt. For the price they charge, I expected much better quality.",
+        "Dirty tables, sticky floors, and they got my order wrong twice. Will not be coming back.",
+        "The machine broke after only two months of use. Terrible build quality and customer service was no help at all."
+    ]
+}

@@ -1,0 +1,8 @@
+{
+    "instances": [
+        "espresso absolutely incredible rich smooth perfectly balanced every single time visit",
+        "waited minutes simple drip coffee barista seemed completely uninterested helping customers",
+        "love cozy atmosphere pastries die favorite spot work remotely weekday mornings",
+        "coffee lukewarm tasted burnt price charge expected much better quality"
+    ]
+}

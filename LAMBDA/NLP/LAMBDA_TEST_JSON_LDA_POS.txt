@@ -1,0 +1,8 @@
+{
+    "instances": [
+        "The espresso here is absolutely incredible. Rich, smooth, and perfectly balanced every single time I visit.",
+        "Love the cozy atmosphere and the pastries are to die for. My favorite spot to work remotely on weekday mornings.",
+        "The new cold brew blend is amazing! Staff are always friendly and remember my usual order.",
+        "Best coffee maker I have ever owned. Makes a perfect cup every morning and the auto-brew timer is so convenient."
+    ]
+}

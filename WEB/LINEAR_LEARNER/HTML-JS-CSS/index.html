@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ames Housing Price Predictor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="dashboard">
+
+    <!-- ========== Header ========== -->
+    <header class="header">
+      <div class="header-icon">&#127968;</div>
+      <h1>Ames Housing Price Predictor</h1>
+      <p class="tagline">AI-Powered Real Estate Valuation</p>
+    </header>
+
+    <!-- ========== Scenario Card ========== -->
+    <div class="card scenario-card">
+      <h2 class="card-title">Business Scenario</h2>
+      <p>
+        You are a real estate analyst evaluating residential properties in Ames, Iowa.
+        Your company needs fast, data-driven price estimates for incoming listings.
+        This dashboard uses an AWS SageMaker <strong>Linear Learner</strong> regression model
+        trained on historical sales data (2,930 homes with 203 engineered features) to predict
+        sale prices. Paste a row of features from your validation set below, or click an
+        example button to load sample data, then click "Predict Price" to get an instant valuation.
+      </p>
+    </div>
+
+    <!-- ========== Input Section ========== -->
+    <div class="card input-section">
+      <h2 class="card-title">Housing Features</h2>
+      <textarea id="featureInput" rows="8" placeholder="Paste 203 comma-separated numeric feature values here..."></textarea>
+      <p class="textarea-hint">Enter 203 comma-separated numeric values from your notebook validation set. Each value represents an engineered feature of the property.</p>
+
+      <div class="example-row">
+        <span class="example-label">Load Example:</span>
+        <button class="btn btn-example" data-example="1">Example 1</button>
+        <button class="btn btn-example" data-example="2">Example 2</button>
+        <button class="btn btn-example" data-example="3">Example 3</button>
+      </div>
+
+      <div class="button-row">
+        <button id="predictBtn" class="btn btn-primary">Predict Price</button>
+        <button id="clearBtn" class="btn btn-secondary">Clear</button>
+      </div>
+    </div>
+
+    <!-- ========== Progress Indicator ========== -->
+    <div id="progressIndicator" class="progress-indicator">
+      <div class="progress-step" id="progressStep1">
+        <div class="step-icon">1</div>
+        <div class="step-text">Sending Features</div>
+      </div>
+      <div class="progress-connector"></div>
+      <div class="progress-step" id="progressStep2">
+        <div class="step-icon">2</div>
+        <div class="step-text">Predicting Price</div>
+      </div>
+    </div>
+
+    <!-- ========== Results Area ========== -->
+    <div id="resultsArea">
+      <div id="resultPanel" class="card result-card">
+        <h2 class="panel-title">Prediction Result</h2>
+        <div id="predictionResult"></div>
+      </div>
+    </div>
+
+    <!-- ========== Settings Section ========== -->
+    <div class="card settings-card">
+      <h2 class="card-title">API Settings</h2>
+
+      <div class="setting-group">
+        <label for="predictUrl">Prediction API URL</label>
+        <!-- INSTRUCTION: Paste your API Gateway Invoke URL here (ending with /predict) -->
+        <input type="text" id="predictUrl"
+               placeholder="https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/predict">
+      </div>
+
+      <div class="settings-button-row">
+        <button id="saveSettingsBtn" class="btn btn-save">Save Settings</button>
+      </div>
+      <p class="settings-hint">
+        Settings are saved in your browser and will persist across page reloads.
+        Paste your full API Gateway Invoke URL including the /predict path.
+      </p>
+    </div>
+
+    <!-- ========== Footer ========== -->
+    <footer class="footer">
+      <p>COMM 493 &mdash; Machine Learning for Business &mdash; Queen's University Smith School of Business</p>
+    </footer>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
