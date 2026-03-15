@@ -1,0 +1,54 @@
+TEST 1: BUDGET HOME
+Expected: Budget / lowest price cluster
+{
+    "instances": [[4, 864, 1950, 600, 280]]
+}
+
+TEST 2: MID-RANGE HOME
+Expected: Mid-Range / middle price cluster
+{
+    "instances": [[6, 1500, 1995, 1000, 480]]
+}
+
+TEST 3: PREMIUM HOME
+Expected: Premium / highest price cluster
+{
+    "instances": [[9, 2400, 2008, 1400, 700]]
+}
+
+INPUT FORMAT: [Overall Quality, Living Area sqft, Year Built, Basement sqft, Garage sqft]
+
+HOW TO TEST:
+1. Open the Lambda function in the AWS Console
+2. Click "Test" tab
+3. Paste ONE test event at a time (just the JSON block)
+4. Click "Test" and check the response
+
+WHAT TO LOOK FOR:
+- Each test should return a DIFFERENT closest_cluster value
+- The Lambda uses quality-conditional defaults: a quality-9 home gets
+  realistic premium medians for ALL ~69 non-user features (Exter Qual,
+  Kitchen Qual, Year Built, etc.), not just global medians
+- If all three return the SAME cluster, check CloudWatch logs for:
+    * The quality level being used for defaults
+    * The PCA values (PC1, PC2) - they should differ significantly
+    * Any errors in the preprocessing steps
+- If PCA values are nearly identical across all 3 tests, the issue is
+  likely in QUALITY_MEDIANS (did you populate it correctly?)
+- If PCA values differ but clusters are the same, the KMeans endpoint
+  may have been trained with more than 2 PCA components (check the
+  grid search output in your notebook for num_pca_components)
+
+GENERATING QUALITY_MEDIANS FOR THE LAMBDA:
+After running STEP 4 in your notebook, run this code to generate the
+QUALITY_MEDIANS dictionary:
+
+    import json
+    quality_medians = df_features.groupby('Overall Qual').median()
+    result = {}
+    for qual_level, row in quality_medians.iterrows():
+        result[int(qual_level)] = dict(row)
+    print(json.dumps(result, indent=2))
+
+Copy the output and paste it into the QUALITY_MEDIANS dictionary in
+lambda_pca_kmeans.py.
