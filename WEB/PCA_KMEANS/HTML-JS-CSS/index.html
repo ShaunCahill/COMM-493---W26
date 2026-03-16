@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ames Housing Market Segmentation Tool</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="dashboard">
+
+    <!-- ========== Header ========== -->
+    <header class="header">
+      <div class="header-icon">&#127968;</div>
+      <h1>Ames Housing Market Segmentation Tool</h1>
+      <p class="tagline">AI-Powered Property Cluster Analysis</p>
+    </header>
+
+    <!-- ========== Scenario Card ========== -->
+    <div class="card scenario-card">
+      <h2 class="card-title">Business Scenario</h2>
+      <p>
+        You are a real estate market analyst who segments properties into market tiers
+        for pricing guidance and identifying comparable properties.
+        This dashboard uses an AWS SageMaker <strong>KMeans</strong> clustering model
+        trained on 2,930 Ames, Iowa homes. The model uses PCA to reduce 74 engineered features
+        down to 2 principal components, then groups properties into market tiers.
+        The number of tiers (K) is determined by your model's training — check your
+        notebook's cluster visualization to see how many tiers your model uses.
+        Enter five key property features below and click "Classify Property" to see which
+        market tier the home falls into.
+      </p>
+    </div>
+
+    <!-- ========== Input Section ========== -->
+    <div class="card input-section">
+      <h2 class="card-title">Housing Features</h2>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="overallQual">Overall Quality (1-10)</label>
+          <input type="number" id="overallQual" min="1" max="10" step="1" placeholder="e.g. 7">
+          <span class="input-hint">1 = Very Poor, 10 = Very Excellent</span>
+        </div>
+
+        <div class="form-group">
+          <label for="grLivArea">Above-Ground Living Area (sq ft)</label>
+          <input type="number" id="grLivArea" min="300" max="6000" step="1" placeholder="e.g. 1500">
+          <span class="input-hint">Typical range: 600 - 3,000 sq ft</span>
+        </div>
+
+        <div class="form-group">
+          <label for="yearBuilt">Year Built</label>
+          <input type="number" id="yearBuilt" min="1870" max="2025" step="1" placeholder="e.g. 2005">
+          <span class="input-hint">Year the home was originally constructed</span>
+        </div>
+
+        <div class="form-group">
+          <label for="totalBsmtSF">Total Basement Area (sq ft)</label>
+          <input type="number" id="totalBsmtSF" min="0" max="6000" step="1" placeholder="e.g. 1000">
+          <span class="input-hint">Enter 0 if no basement</span>
+        </div>
+
+        <div class="form-group">
+          <label for="garageArea">Garage Area (sq ft)</label>
+          <input type="number" id="garageArea" min="0" max="1500" step="1" placeholder="e.g. 500">
+          <span class="input-hint">Enter 0 if no garage</span>
+        </div>
+      </div>
+
+      <div class="example-row">
+        <span class="example-label">Load Example:</span>
+        <button class="btn btn-example" data-example="budget">Modest Home</button>
+        <button class="btn btn-example" data-example="midrange">Average Home</button>
+        <button class="btn btn-example" data-example="premium">Upscale Home</button>
+      </div>
+
+      <div class="button-row">
+        <button id="classifyBtn" class="btn btn-primary">Classify Property</button>
+        <button id="clearBtn" class="btn btn-secondary">Clear</button>
+      </div>
+    </div>
+
+    <!-- ========== Progress Indicator ========== -->
+    <div id="progressIndicator" class="progress-indicator">
+      <div class="progress-step" id="progressStep1">
+        <div class="step-icon">1</div>
+        <div class="step-text">Sending Features</div>
+      </div>
+      <div class="progress-connector"></div>
+      <div class="progress-step" id="progressStep2">
+        <div class="step-icon">2</div>
+        <div class="step-text">Classifying Property</div>
+      </div>
+    </div>
+
+    <!-- ========== Results Area ========== -->
+    <div id="resultsArea">
+      <div id="resultPanel" class="card result-card">
+        <h2 class="panel-title">Segmentation Result</h2>
+        <div id="classificationResult"></div>
+      </div>
+    </div>
+
+    <!-- ========== Settings Section ========== -->
+    <div class="card settings-card">
+      <h2 class="card-title">API Settings</h2>
+
+      <div class="setting-group">
+        <label for="classifyUrl">Classification API URL</label>
+        <!-- INSTRUCTION: Paste your API Gateway Invoke URL here (ending with /classify) -->
+        <input type="text" id="classifyUrl"
+               placeholder="https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/prod/classify">
+      </div>
+
+      <div class="settings-button-row">
+        <button id="saveSettingsBtn" class="btn btn-save">Save Settings</button>
+      </div>
+      <p class="settings-hint">
+        Settings are saved in your browser and will persist across page reloads.
+        Paste your full API Gateway Invoke URL including the /classify path.
+      </p>
+    </div>
+
+    <!-- ========== Footer ========== -->
+    <footer class="footer">
+      <p>COMM 493 &mdash; Machine Learning for Business &mdash; Queen's University Smith School of Business</p>
+    </footer>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

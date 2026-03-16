@@ -1,0 +1,645 @@
+/*
+  Ames Housing Market Segmentation Tool
+  Professional dashboard design system for property cluster analysis.
+*/
+
+/* ============================================================
+   CSS Custom Properties (Design Tokens)
+   ============================================================ */
+:root {
+    --brand: #1E3A5F;
+    --brand-dark: #152C4A;
+    --accent: #0D9488;
+    --accent-hover: #0A7A70;
+    --surface: #F7F8FA;
+    --surface-dark: #ECEEF2;
+    --positive: #2E7D32;
+    --positive-bg: #E8F5E9;
+    --text-primary: #1A1A2E;
+    --text-secondary: #555566;
+    --text-light: #888899;
+    --border: #D5D8E0;
+    --border-light: #E8EAF0;
+    --white: #FFFFFF;
+    --tier-budget: #4C72B0;
+    --tier-midrange: #0D9488;
+    --tier-premium: #B8860B;
+    --error: #C62828;
+    --error-bg: #FFEBEE;
+    --shadow-sm: 0 1px 3px rgba(30, 58, 95, 0.06);
+    --shadow-md: 0 4px 12px rgba(30, 58, 95, 0.08);
+    --shadow-lg: 0 8px 24px rgba(30, 58, 95, 0.1);
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+}
+
+/* ============================================================
+   Base Styles
+   ============================================================ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--surface);
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: var(--text-primary);
+    line-height: 1.6;
+    padding: 24px 16px;
+}
+
+/* ============================================================
+   Layout
+   ============================================================ */
+.dashboard {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* ============================================================
+   Header
+   ============================================================ */
+.header {
+    text-align: center;
+    padding: 32px 24px;
+    background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+    color: var(--white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 24px;
+}
+
+.header-icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 4px;
+}
+
+.header .tagline {
+    font-size: 16px;
+    color: #7EB8DA;
+    font-weight: 400;
+}
+
+/* ============================================================
+   Cards (shared)
+   ============================================================ */
+.card {
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--brand);
+    margin-bottom: 12px;
+}
+
+/* ============================================================
+   Scenario Card
+   ============================================================ */
+.scenario-card {
+    border-left: 4px solid var(--accent);
+}
+
+.scenario-card p {
+    color: var(--text-secondary);
+    font-size: 15px;
+}
+
+/* ============================================================
+   Input Section (Form Grid)
+   ============================================================ */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.form-group input[type="number"] {
+    width: 100%;
+    padding: 10px 14px;
+    font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.2s ease;
+}
+
+.form-group input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.form-group input[type="number"]::placeholder {
+    color: var(--text-light);
+}
+
+.input-hint {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+.example-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+}
+
+.example-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.button-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+/* ============================================================
+   Buttons
+   ============================================================ */
+.btn {
+    padding: 12px 28px;
+    font-size: 15px;
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-primary {
+    background-color: var(--accent);
+    color: var(--white);
+}
+
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+}
+
+.btn-secondary {
+    background-color: var(--surface-dark);
+    color: var(--text-secondary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background-color: var(--border);
+}
+
+.btn-example {
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    background-color: var(--surface-dark);
+    color: var(--brand);
+    border: 1px solid var(--border);
+}
+
+.btn-example:hover {
+    background-color: var(--border);
+}
+
+/* ============================================================
+   Progress Indicator
+   ============================================================ */
+.progress-indicator {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 20px 24px;
+    margin-bottom: 20px;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+}
+
+.progress-step {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0.4;
+    transition: opacity 0.3s ease;
+}
+
+.progress-step.active {
+    opacity: 1;
+}
+
+.progress-step.completed {
+    opacity: 0.7;
+}
+
+.step-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: var(--border);
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.progress-step.active .step-icon {
+    background-color: var(--accent);
+    animation: pulse 1.5s infinite;
+}
+
+.progress-step.completed .step-icon {
+    background-color: var(--positive);
+}
+
+.step-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.progress-step.active .step-text {
+    color: var(--text-primary);
+}
+
+.progress-connector {
+    width: 40px;
+    height: 2px;
+    background-color: var(--border);
+    margin: 0 12px;
+    transition: background-color 0.3s ease;
+}
+
+.progress-connector.filled {
+    background-color: var(--positive);
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.3); }
+    50% { box-shadow: 0 0 0 8px rgba(13, 148, 136, 0); }
+}
+
+/* ============================================================
+   Results Area
+   ============================================================ */
+#resultsArea {
+    display: none;
+}
+
+.result-card {
+    border-top: 3px solid var(--positive);
+}
+
+.panel-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--brand);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-light);
+}
+
+/* ============================================================
+   Tier Display
+   ============================================================ */
+.tier-display {
+    text-align: center;
+    padding: 24px;
+    background: var(--surface);
+    border-radius: var(--radius-md);
+    margin-bottom: 20px;
+}
+
+.tier-badge {
+    display: inline-block;
+    padding: 10px 32px;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--white);
+    border-radius: 50px;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.tier-description {
+    font-size: 15px;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ============================================================
+   Profile Stats
+   ============================================================ */
+.profile-stats {
+    margin-bottom: 20px;
+}
+
+.stats-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.stat-item {
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    border: 1px solid var(--border-light);
+    text-align: center;
+}
+
+.stat-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.price-stat {
+    color: var(--positive);
+    font-size: 18px;
+}
+
+/* ============================================================
+   Result Details
+   ============================================================ */
+.result-details {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.detail-item {
+    flex: 1;
+    min-width: 150px;
+    background: var(--surface);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    border: 1px solid var(--border-light);
+}
+
+.detail-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+}
+
+.detail-value {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.detail-hint {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-light);
+    margin-top: 2px;
+}
+
+/* ============================================================
+   Settings Section
+   ============================================================ */
+.settings-card {
+    border-top: 3px solid var(--brand);
+}
+
+.settings-card .card-title {
+    font-size: 16px;
+}
+
+.setting-group {
+    margin-bottom: 16px;
+}
+
+.setting-group:last-of-type {
+    margin-bottom: 0;
+}
+
+.setting-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.setting-group input[type="text"] {
+    width: 100%;
+    padding: 10px 14px;
+    font-family: "Segoe UI Mono", "SF Mono", "Consolas", monospace;
+    font-size: 13px;
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    transition: border-color 0.2s ease;
+}
+
+.setting-group input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.setting-group input[type="text"]::placeholder {
+    color: var(--text-light);
+}
+
+.settings-button-row {
+    margin-top: 16px;
+}
+
+.btn-save {
+    background-color: var(--brand);
+    color: var(--white);
+    padding: 10px 24px;
+    font-size: 14px;
+}
+
+.btn-save:hover:not(:disabled) {
+    background-color: var(--brand-dark);
+}
+
+.btn-saved {
+    background-color: var(--positive) !important;
+}
+
+.settings-hint {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.footer {
+    text-align: center;
+    padding: 24px;
+    color: var(--text-light);
+    font-size: 13px;
+}
+
+/* ============================================================
+   Utility Classes
+   ============================================================ */
+.loading {
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    padding: 20px;
+}
+
+.error-message {
+    color: var(--error);
+    background-color: var(--error-bg);
+    padding: 12px 16px;
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+}
+
+.no-results {
+    text-align: center;
+    color: var(--text-light);
+    padding: 20px;
+}
+
+/* ============================================================
+   Responsive Design
+   ============================================================ */
+@media (max-width: 640px) {
+    body {
+        padding: 12px 8px;
+    }
+
+    .header {
+        padding: 24px 16px;
+    }
+
+    .header h1 {
+        font-size: 22px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .result-details {
+        flex-direction: column;
+    }
+
+    .detail-item {
+        min-width: 100%;
+    }
+
+    .button-row {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .example-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .progress-indicator {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .progress-connector {
+        display: none;
+    }
+
+    .tier-badge {
+        font-size: 18px;
+        padding: 8px 24px;
+    }
+}
+
+@media (max-width: 400px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}

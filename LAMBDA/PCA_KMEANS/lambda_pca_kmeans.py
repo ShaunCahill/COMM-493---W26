@@ -8,7 +8,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 # INSTRUCTION: Replace with your deployed SageMaker KMeans endpoint name
-# from the PCA_KMeans Demo 2 notebook (STEP 12: Deploy Best Model).
+# from the PCA_KMeans HPT notebook (STEP 14: Deploy Best Model).
 ENDPOINT_NAME = "your-pca-kmeans-endpoint-name"
 
 # Initialize the SageMaker runtime client
@@ -62,13 +62,19 @@ FEATURE_NAMES = [
 # median defaults. This way a quality-9 home gets realistic premium defaults
 # for correlated features like Exter Qual, Kitchen Qual, Garage Area, etc.
 #
-# In your notebook after STEP 4 (Preprocess Data), run:
+# In your notebook after STEP 4 (Preprocess Data), AFTER the log-transform
+# has been applied to skewed features, run:
 #
 #     quality_medians = df_features.groupby('Overall Qual').median()
 #     result = {}
 #     for qual_level, row in quality_medians.iterrows():
 #         result[int(qual_level)] = dict(row)
 #     print(json.dumps(result, indent=2))
+#
+# IMPORTANT: Run this AFTER the log-transform cell in STEP 4. The medians
+# must come from the already-log-transformed data. If you extract medians
+# before the log-transform, the Lambda will produce incorrect PCA values
+# because it would double-log the median defaults.
 #
 # Then copy the output and paste it here. Each key is a quality level (1-10),
 # and each value is a dictionary of feature medians for homes at that quality.
@@ -146,9 +152,10 @@ SCALER_SCALE = [
 #
 #     print([list(row) for row in pca_components_matrix.T])
 #
-# This prints a list of 2 lists (one per principal component),
-# where each inner list has ~74 values. Paste the output here.
-# NOTE: We transpose here because the Lambda multiplies input @ components.
+# This prints 2 lists (one per principal component), each with ~74 values.
+# Paste the output here. The .T transpose in the print command puts the
+# components in the row format the Lambda expects (it loops over components
+# as rows and computes the dot product with the feature vector).
 
 PCA_COMPONENTS = [
     # INSTRUCTION: Paste your PCA component vectors here.
@@ -169,23 +176,26 @@ PCA_COMPONENTS = [
 # these feature names appear in your list. If your notebook uses
 # slightly different column names, update the keys below to match.
 
-USER_FEATURE_MAP = {
-    "Overall Qual": 0,    # Index in FEATURE_NAMES for Overall Quality
-    "Gr Liv Area": 1,     # Index for Above-Ground Living Area
-    "Year Built": 2,      # Index for Year Built
-    "Total Bsmt SF": 3,   # Index for Total Basement SF
-    "Garage Area": 4,     # Index for Garage Area
-}
+USER_FEATURE_NAMES = ["Overall Qual", "Gr Liv Area", "Year Built", "Total Bsmt SF", "Garage Area"]
 
-# INSTRUCTION: After pasting FEATURE_NAMES, update the index values
-# above. For example, if "Overall Qual" is the 5th item (index 4)
-# in your FEATURE_NAMES list, set its value to 4. Run this in your
-# notebook to find the indices:
-#
-#     feature_list = list(df_features.columns)
-#     for name in ["Overall Qual", "Gr Liv Area", "Year Built",
-#                  "Total Bsmt SF", "Garage Area"]:
-#         print(f"{name}: index {feature_list.index(name)}")
+# USER_FEATURE_MAP is auto-computed from FEATURE_NAMES when the Lambda
+# loads. No manual index lookup needed — just populate FEATURE_NAMES above.
+
+
+# ============================================================
+# AUTO-COMPUTE USER_FEATURE_MAP FROM FEATURE_NAMES
+# ============================================================
+# This runs once at Lambda cold-start. If FEATURE_NAMES is empty
+# (student hasn't pasted it yet), the map stays empty and the
+# handler returns a clear error message.
+
+USER_FEATURE_MAP = {}
+if FEATURE_NAMES:
+    for name in USER_FEATURE_NAMES:
+        if name in FEATURE_NAMES:
+            USER_FEATURE_MAP[name] = FEATURE_NAMES.index(name)
+        else:
+            logger.warning(f"'{name}' not found in FEATURE_NAMES. Check column names.")
 
 
 # ============================================================
@@ -334,22 +344,69 @@ def lambda_handler(event, context):
             }
 
         # Validate configuration is populated
-        if not FEATURE_NAMES:
-            return {
-                "statusCode": 500,
-                "headers": CORS_HEADERS,
-                "body": json.dumps({"error": "FEATURE_NAMES is empty. Follow the INSTRUCTION comments to populate it from your notebook."})
-            }
+        config_checks = [
+            (FEATURE_NAMES, "FEATURE_NAMES", "STEP 4 (Preprocess Data): print(list(df_features.columns))"),
+            (QUALITY_MEDIANS, "QUALITY_MEDIANS", "STEP 4 (Preprocess Data): see INSTRUCTION comment in this file"),
+            (LOG_TRANSFORM_COLUMNS, "LOG_TRANSFORM_COLUMNS", "STEP 4 (Preprocess Data): print(log_transformed_cols)"),
+            (SCALER_MEAN, "SCALER_MEAN", "STEP 5 (Standardize): print(list(scaler.mean_))"),
+            (SCALER_SCALE, "SCALER_SCALE", "STEP 5 (Standardize): print(list(scaler.scale_))"),
+            (PCA_COMPONENTS, "PCA_COMPONENTS", "STEP 8 (PCA Loadings): print([list(row) for row in pca_components_matrix.T])"),
+        ]
 
-        if not QUALITY_MEDIANS:
-            return {
-                "statusCode": 500,
-                "headers": CORS_HEADERS,
-                "body": json.dumps({"error": "QUALITY_MEDIANS is empty. Follow the INSTRUCTION comments to populate it from your notebook."})
-            }
+        for config_val, config_name, notebook_hint in config_checks:
+            if not config_val:
+                return {
+                    "statusCode": 500,
+                    "headers": CORS_HEADERS,
+                    "body": json.dumps({"error": f"{config_name} is empty. Populate it from your notebook {notebook_hint}"})
+                }
 
-        user_values = instances[0]
+        # Validate configuration array lengths are consistent
         num_features = len(FEATURE_NAMES)
+        length_checks = [
+            (SCALER_MEAN, "SCALER_MEAN"),
+            (SCALER_SCALE, "SCALER_SCALE"),
+        ]
+        for arr, arr_name in length_checks:
+            if len(arr) != num_features:
+                return {
+                    "statusCode": 500,
+                    "headers": CORS_HEADERS,
+                    "body": json.dumps({"error": f"{arr_name} has {len(arr)} values but FEATURE_NAMES has {num_features}. They must match."})
+                }
+
+        if PCA_COMPONENTS and len(PCA_COMPONENTS[0]) != num_features:
+            return {
+                "statusCode": 500,
+                "headers": CORS_HEADERS,
+                "body": json.dumps({"error": f"PCA_COMPONENTS[0] has {len(PCA_COMPONENTS[0])} values but FEATURE_NAMES has {num_features}. They must match."})
+            }
+
+        if not USER_FEATURE_MAP or len(USER_FEATURE_MAP) != 5:
+            return {
+                "statusCode": 500,
+                "headers": CORS_HEADERS,
+                "body": json.dumps({"error": f"USER_FEATURE_MAP could not be computed. Check that these names exist in FEATURE_NAMES: {USER_FEATURE_NAMES}"})
+            }
+
+        # Validate input ranges
+        user_values = instances[0]
+        qual, area, year, bsmt, garage = user_values
+        range_checks = [
+            (qual, "Overall Quality", 1, 10),
+            (area, "Living Area", 1, 100000),
+            (year, "Year Built", 1800, 2030),
+            (bsmt, "Basement SF", 0, 100000),
+            (garage, "Garage Area", 0, 100000),
+        ]
+        for val, name, lo, hi in range_checks:
+            if not (lo <= val <= hi):
+                return {
+                    "statusCode": 400,
+                    "headers": CORS_HEADERS,
+                    "body": json.dumps({"error": f"{name} value {val} is out of range [{lo}, {hi}]."})
+                }
+
         quality_level = user_values[0]  # First input is Overall Qual
 
         logger.info(f"Received 5 user features: {user_values}")
@@ -364,19 +421,20 @@ def lambda_handler(event, context):
         logger.info(f"Built {num_features}-feature vector with quality-{int(quality_level)} defaults")
 
         # ---- Step 2: Override with user-provided values ----
-        user_feature_names = ["Overall Qual", "Gr Liv Area", "Year Built", "Total Bsmt SF", "Garage Area"]
-        for i, feat_name in enumerate(user_feature_names):
+        for i, feat_name in enumerate(USER_FEATURE_NAMES):
             if feat_name in USER_FEATURE_MAP:
                 idx = USER_FEATURE_MAP[feat_name]
                 feature_vector[idx] = float(user_values[i])
 
         # ---- Step 3: Apply log1p to user-entered features only ----
-        # QUALITY_MEDIANS are extracted from df_features which is ALREADY
-        # log-transformed in the notebook preprocessing (step 7). Applying
-        # log1p again to those defaults would double-log them, distorting
-        # the PCA projection. We only log-transform the 5 raw user inputs.
+        # IMPORTANT: QUALITY_MEDIANS must be extracted from df_features AFTER
+        # log-transformation in the notebook (STEP 4). The notebook applies
+        # np.log1p() to skewed features before computing medians, so the values
+        # in QUALITY_MEDIANS are already log-transformed. Applying log1p again
+        # would double-log them, distorting the PCA projection.
+        # We only log-transform the 5 raw user inputs (which are in original scale).
         log_col_set = set(LOG_TRANSFORM_COLUMNS)
-        for feat_name in user_feature_names:
+        for feat_name in USER_FEATURE_NAMES:
             if feat_name in log_col_set and feat_name in USER_FEATURE_MAP:
                 idx = USER_FEATURE_MAP[feat_name]
                 feature_vector[idx] = log1p(feature_vector[idx])
